@@ -13,16 +13,24 @@ What the API does, who uses it, and why a client app would need it.
 
 ```mermaid
 erDiagram
-    USER ||--o{ THING : owns
+    USER ||--o{ FLOWER : owns
+    QUOTE }o--o{ FLOWER : displayed_together
     USER {
-        bigint id PK
+        bigint user_id PK "generated"
+        string usename
         string email UK
     }
-    THING {
-        bigint id PK
-        bigint user_id FK
+    FLOWER {
+        bigint sci_name PK
+        bigint user_id FK "'uploaded by'"
         string name
         string notes "nullable"
+        string img_link "image ref"
+    }
+    QUOTE {
+        bigint quote_id PK "generated"
+        string quote_text "non null"
+        string author
     }
 ```
 
