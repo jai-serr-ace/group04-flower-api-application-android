@@ -10,8 +10,6 @@ What the API does, who uses it, and why a client app would need it.
 | ... | ... | ... |
 
 ## 3. ER sketch
-Tables, primary and foreign keys, and cardinality. Edit this Mermaid diagram (it renders on GitHub;
-try changes at https://mermaid.live):
 
 ```mermaid
 erDiagram
@@ -29,10 +27,10 @@ erDiagram
 ```
 
 ## 4. Endpoints
-| Verb | Path | Auth | Purpose |
-|---|---|---|---|
-| GET | /api/v1/workouts?page=0&size=20 | user | list my workouts (paginated) |
-| ... | ... | ... | ... |
+| Verb | Path       | Auth | Purpose  |
+|---|------------|---|----------|
+| GET | /api/v1/temp | user | function |
+| ... | ...        | ... | ...      |
 Mark each endpoint `public`, `user`, or `admin`. Mark which collection paginates and which
 filters or sorts.
 
