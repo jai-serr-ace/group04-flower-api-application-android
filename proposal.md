@@ -1,4 +1,4 @@
-# <API name> Proposal
+# FlowerAPI Proposal
 
 ## 1. The pitch (one paragraph)
 What the API does, who uses it, and why a client app would need it.
