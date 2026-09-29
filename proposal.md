@@ -37,9 +37,9 @@ Mark each endpoint `public`, `user`, or `admin`. Mark which collection paginates
 filters or sorts.
 
 ## 5. Technical choices
-- **Database host:** Railway - 
+- **Database host:** Railway -- 
 - **OAuth2 provider:** (Google, GitHub, Auth0) and confirmation that it supports Authorization Code + PKCE from a native app
-- **Repo layout:** split repo - 
+- **Repo layout:** split repo -- 
 
 ## 6. Risks
 The two things most likely to go wrong, and what you will do first to find out.
