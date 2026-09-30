@@ -18,8 +18,8 @@ A web or mobile client may use the API to display searchable flower collections 
 ```mermaid
 erDiagram
     USER ||--o{ FLOWER : owns
-    FLOWER ||o--o{ FQLINKS : links
-    QUOTE ||o--o{ FQLINKS : links
+    FLOWER ||--o{ FQLINKS : links
+    QUOTE ||--o{ FQLINKS : links
     USER {
         bigint user_id PK "generated"
         string username
