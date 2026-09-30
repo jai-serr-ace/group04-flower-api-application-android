@@ -6,12 +6,13 @@ Authenticated users are able to upload flowers, and clients can browse, search, 
 A web or mobile client may use the API to display searchable flower collections while allowing users to create and/or add to entries.
 
 ## 2. Resources
-| Resource | Key fields                                                                | Relationships                      |
-|----------|---------------------------------------------------------------------------|------------------------------------|
-| User     | user id, email, username, OAuth provider id                               | a User can upload many flowers     |
-| Flower   | flower id, scientific name, user (uploader) id, common name, notes, image | a flower is dispalyed with a quote |
-| Quote    | quote id, quote text, author                                              | a quote is displayed with a flower |
-| ...      | ...                                                                       | ...                                |
+| Resource          | Key fields                                                                | Relationships                           |
+|-------------------|---------------------------------------------------------------------------|-----------------------------------------|
+| User              | user id, email, username, OAuth provider id                               | a User can upload many flowers          |
+| Flower            | flower id, scientific name, user (uploader) id, common name, notes, image | a flower object                         |
+| Quote             | quote id, quote text, author                                              | a quote object                          |
+| Flower-Quote Link | link id, flower id, quote id                                              | display link between flowers and quotes |
+| ...               | ...                                                                       | ...                                     |
 
 ## 3. ER sketch
 
