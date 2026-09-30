@@ -60,6 +60,7 @@ erDiagram
 | GET    | /api/v1/users/me            | user       | view current user       |
 | GET    | /api/v1/health              | public     | check if API is running |
 | ...    | ...                         | ...        | ...                     |
+
 The `GET /flowers` and `GET /quotes` collection endpoints support pagination. Flowers can be filtered by scientific name and common name and sorted by name. Users may edit or delete only flowers they own; administrators may manage all flowers.
 
 - `200 OK` successful read
