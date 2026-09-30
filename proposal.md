@@ -4,20 +4,21 @@
 What the API does, who uses it, and why a client app would need it.
 
 ## 2. Resources
-| Resource | Key fields | Relationships |
-|---|---|---|
-| User | id, email, displayName, role | a User has many Workouts |
-| ... | ... | ... |
+| Resource | Key fields                                                     | Relationships                      |
+|----------|----------------------------------------------------------------|------------------------------------|
+| User     | user id, email, userame                                        | a User can upload many flowers     |
+| Floweer  | scientific name, user (uploader) id, common name, notes, image | a flower is diaplyed with a quote  |
+| Quote    | quotee id, quote text, author                                  | a quote is displayed with a flower |
+| ...      | ...                                                            | ...                                |
 
 ## 3. ER sketch
 
 ```mermaid
 erDiagram
     USER ||--o{ FLOWER : owns
-    QUOTE }o--o{ FLOWER : displayed_together
     USER {
         bigint user_id PK "generated"
-        string usename
+        string username
         string email UK
     }
     FLOWER {
@@ -43,9 +44,9 @@ Mark each endpoint `public`, `user`, or `admin`. Mark which collection paginates
 filters or sorts.
 
 ## 5. Technical choices
-- **Database host:** Railway -- 
+- **Database host:** Railway -- natively supports PostgreSQL, which we have experience with
 - **OAuth2 provider:** (Google, GitHub, Auth0) and confirmation that it supports Authorization Code + PKCE from a native app
-- **Repo layout:** split repo -- 
+- **Repo layout:** split repo -- recommended by Dr. C
 
 ## 6. Risks
 The two things most likely to go wrong, and what you will do first to find out.
