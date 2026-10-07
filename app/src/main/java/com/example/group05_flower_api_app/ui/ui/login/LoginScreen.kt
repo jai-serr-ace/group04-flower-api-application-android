@@ -2,8 +2,6 @@ package com.example.group05_flower_api_app.ui.ui.login
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -11,25 +9,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.group05_flower_api_app.R
+import kotlinx.coroutines.launch
 
+/**
+ * Top-level Composable for the Login Screen that observes ViewModel state
+ * and triggers Google OAuth 2.0 authentication via [GoogleAuthHelper].
+ */
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,
     onLoginSuccess: (LoggedInUserView) -> Unit
 ) {
     val context = LocalContext.current
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
     var isLoading by remember { mutableStateOf(false) }
 
     val loginResult by viewModel.loginResult.observeAsState()
 
+    // Observe login authentication state changes
     LaunchedEffect(loginResult) {
         loginResult?.let { result ->
             isLoading = false
@@ -37,31 +37,43 @@ fun LoginScreen(
                 val welcome = context.getString(R.string.welcome)
                 Toast.makeText(context, "$welcome ${result.success.displayName}", Toast.LENGTH_LONG).show()
                 onLoginSuccess(result.success)
+            } else if (result.error != null) {
+                val errorMsg = context.getString(result.error)
+                Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     LoginContent(
-        username = username,
-        onUsernameChange = { username = it },
-        password = password,
-        onPasswordChange = { password = it },
         isLoading = isLoading,
-        onLoginClick = {
+        onGoogleSignInClick = {
             isLoading = true
-            viewModel.login(username, password)
+            coroutineScope.launch {
+                // Trigger Google OAuth 2.0 Credential Manager sign-in prompt
+                GoogleAuthHelper.signInWithGoogle(
+                    context = context,
+                    onSuccess = { idToken, displayName ->
+                        viewModel.loginWithGoogle(idToken, displayName)
+                    },
+                    onFailure = { error ->
+                        isLoading = false
+                        val message = error.message ?: "Google Sign-In failed"
+                        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                        viewModel.onGoogleLoginFailed(error.message)
+                    }
+                )
+            }
         }
     )
 }
 
+/**
+ * UI layout content for the Login screen displaying the Google Sign-In button and loading indicator.
+ */
 @Composable
 fun LoginContent(
-    username: String,
-    onUsernameChange: (String) -> Unit,
-    password: String,
-    onPasswordChange: (String) -> Unit,
     isLoading: Boolean,
-    onLoginClick: () -> Unit
+    onGoogleSignInClick: () -> Unit = {}
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -76,7 +88,7 @@ fun LoginContent(
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
                 Text(
                     text = "Welcome",
@@ -84,41 +96,13 @@ fun LoginContent(
                     color = MaterialTheme.colorScheme.primary
                 )
 
-                OutlinedTextField(
-                    value = username,
-                    onValueChange = onUsernameChange,
-                    label = { Text(stringResource(R.string.prompt_email)) },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Next
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = onPasswordChange,
-                    label = { Text(stringResource(R.string.prompt_password)) },
-                    singleLine = true,
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = { onLoginClick() }
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
                 Button(
-                    onClick = onLoginClick,
+                    onClick = onGoogleSignInClick,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
                 ) {
-                    Text(stringResource(R.string.action_sign_in))
+                    Text(stringResource(R.string.action_sign_in_google))
                 }
             }
 
@@ -136,12 +120,8 @@ fun LoginContent(
 fun LoginScreenPreview() {
     MaterialTheme {
         LoginContent(
-            username = "user@example.com",
-            onUsernameChange = {},
-            password = "password123",
-            onPasswordChange = {},
             isLoading = false,
-            onLoginClick = {}
+            onGoogleSignInClick = {}
         )
     }
 }

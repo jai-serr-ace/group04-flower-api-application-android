@@ -18,6 +18,22 @@ class LoginDataSource {
         }
     }
 
+    /**
+     * Authenticates the user using Google OAuth 2.0 ID Token credentials.
+     * In a production app, the ID Token is typically sent to your backend server for cryptographic verification.
+     */
+    fun loginWithGoogle(idToken: String, displayName: String): Result<LoggedInUser> {
+        try {
+            val user = LoggedInUser(
+                userId = idToken.takeLast(10).ifBlank { java.util.UUID.randomUUID().toString() },
+                displayName = displayName.ifBlank { "Google User" }
+            )
+            return Result.Success(user)
+        } catch (e: Throwable) {
+            return Result.Error(IOException("Error logging in with Google", e))
+        }
+    }
+
     fun logout() {
         // TODO: revoke authentication
     }
