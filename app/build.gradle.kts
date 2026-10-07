@@ -64,4 +64,11 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.7.0")
+
+    // Credential Manager API
+    implementation("androidx.credentials:credentials:1.3.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+
+    // Google Identity library for OAuth / Google Sign-In
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 }

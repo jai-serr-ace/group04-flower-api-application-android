@@ -6,7 +6,6 @@ import com.example.group05_flower_api_app.ui.data.model.LoggedInUser
  * Class that requests authentication and user information from the remote data source and
  * maintains an in-memory cache of login status and user credentials information.
  */
-
 class LoginRepository(val dataSource: LoginDataSource) {
 
     // in-memory cache of the loggedInUser object
@@ -30,6 +29,19 @@ class LoginRepository(val dataSource: LoginDataSource) {
     fun login(username: String, password: String): Result<LoggedInUser> {
         // handle login
         val result = dataSource.login(username, password)
+
+        if (result is Result.Success) {
+            setLoggedInUser(result.data)
+        }
+
+        return result
+    }
+
+    /**
+     * Authenticates user using Google OAuth 2.0 ID Token and updates local cached session.
+     */
+    fun loginWithGoogle(idToken: String, displayName: String): Result<LoggedInUser> {
+        val result = dataSource.loginWithGoogle(idToken, displayName)
 
         if (result is Result.Success) {
             setLoggedInUser(result.data)
