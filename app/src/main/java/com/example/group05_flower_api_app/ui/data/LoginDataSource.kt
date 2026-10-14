@@ -37,6 +37,7 @@ class LoginDataSource(
     suspend fun loginWithGoogle(idToken: String, displayName: String): Result<LoggedInUser> =
         withContext(Dispatchers.IO) {
             try {
+                Log.d("AUTH_TEST", "Google ID Token is present and valid. Ready to send request to API.")
                 val response = apiService.loginWithGoogle(GoogleAuthRequest(idToken = idToken))
                 if (response.isSuccessful && response.body() != null) {
                     val authData = response.body()!!

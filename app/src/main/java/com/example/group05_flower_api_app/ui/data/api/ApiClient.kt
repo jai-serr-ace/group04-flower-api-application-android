@@ -13,12 +13,18 @@ object ApiClient {
 
     /**
      * Base URL for the Spring Boot REST API.
-     * `10.0.2.2` resolves to `localhost` on the Android Emulator host machine (port 8080 default for Spring Boot).
+     * Default: "http://10.0.2.2:8080/" (Android Emulator localhost pointing to Spring Boot default port 8080).
+     *
+     * IMPORTANT FOR DEPLOYMENT: Update this URL to your production HTTPS backend domain
+     * (e.g., "https://api.yourdomain.com/") before committing production builds.
      */
     var baseUrl: String = "http://10.0.2.2:8080/"
+        set(value) {
+            field = if (value.endsWith("/")) value else "$value/"
+        }
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
+        level = HttpLoggingInterceptor.Level.BASIC
     }
 
     private val okHttpClient = OkHttpClient.Builder()
@@ -28,8 +34,9 @@ object ApiClient {
         .build()
 
     val authApiService: AuthApiService by lazy {
+        val url = if (baseUrl.endsWith("/")) baseUrl else "$baseUrl/"
         Retrofit.Builder()
-            .baseUrl(baseUrl)
+            .baseUrl(url)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
