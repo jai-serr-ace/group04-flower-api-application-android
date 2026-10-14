@@ -60,6 +60,11 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.material)
     testImplementation(libs.junit)
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+    testImplementation("io.mockk:mockk:1.13.12")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
@@ -71,4 +76,12 @@ dependencies {
 
     // Google Identity library for OAuth / Google Sign-In
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
+    // Retrofit & OkHttp for REST API integration (Spring Boot)
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // Security Crypto for EncryptedSharedPreferences (Token Storage)
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 }

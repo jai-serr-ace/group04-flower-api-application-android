@@ -71,29 +71,48 @@ object GoogleAuthHelper {
             .build()
 
         try {
+            Log.d("AUTH_TEST", "Starting Google sign-in")
             // Request credentials via Android Credential Manager
             val result = credentialManager.getCredential(
                 context = activity,
                 request = request
             )
+            Log.d("AUTH_TEST", "Credential response received")
+            Log.d("AUTH_TEST", "Credential type: ${result.credential::class.java.name}")
 
             val credential = result.credential
+            // Verify if the returned credential is a Google ID Token Credential
             if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
                 try {
-                    // Extract Google ID Token and User Information
+                    // Create and verify GoogleIdTokenCredential object from credential bundle
                     val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
                     val idToken = googleIdTokenCredential.idToken
-                    val displayName = googleIdTokenCredential.displayName
-                        ?: googleIdTokenCredential.givenName
-                        ?: googleIdTokenCredential.id
-                    onSuccess(idToken, displayName)
+
+                    if (idToken.isNotEmpty()) {
+                        Log.d("AUTH_TEST", "Verified: Credential is a valid Google ID Token (length: ${idToken.length})")
+                        Log.d("AUTH_TEST", "User email/id: ${googleIdTokenCredential.id}")
+                        Log.d("AUTH_TEST", "User displayName: ${googleIdTokenCredential.displayName}")
+
+                        val displayName = googleIdTokenCredential.displayName
+                            ?: googleIdTokenCredential.givenName
+                            ?: googleIdTokenCredential.id
+                        onSuccess(idToken, displayName)
+                    } else {
+                        val errorMsg = "Verification failed: Received empty Google ID token"
+                        Log.e("AUTH_TEST", errorMsg)
+                        Log.e(TAG, errorMsg)
+                        onFailure(IllegalStateException(errorMsg))
+                    }
                 } catch (e: GoogleIdTokenParsingException) {
+                    Log.e("AUTH_TEST", "Verification failed: Unable to parse Google ID token", e)
                     Log.e(TAG, "Received invalid Google ID token response", e)
                     onFailure(e)
                 }
             } else {
-                Log.e(TAG, "Unexpected credential type: ${credential.type}")
-                onFailure(IllegalArgumentException("Unexpected credential type: ${credential.type}"))
+                val errorMsg = "Verification failed: Unexpected credential type: ${credential.type}"
+                Log.e("AUTH_TEST", errorMsg)
+                Log.e(TAG, errorMsg)
+                onFailure(IllegalArgumentException(errorMsg))
             }
         } catch (e: GetCredentialException) {
             Log.e(TAG, "GetCredentialException during Google sign-in: ${e.message}", e)
