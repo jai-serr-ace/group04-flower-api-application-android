@@ -29,17 +29,18 @@ fun LoginScreen(
 
     val loginResult by viewModel.loginResult.observeAsState()
 
+    val welcomeText = stringResource(R.string.welcome)
+
     // Observe login authentication state changes
     LaunchedEffect(loginResult) {
         loginResult?.let { result ->
             isLoading = false
-            if (result.success != null) {
-                val welcome = context.getString(R.string.welcome)
-                Toast.makeText(context, "$welcome ${result.success.displayName}", Toast.LENGTH_LONG).show()
-                onLoginSuccess(result.success)
-            } else if (result.error != null) {
-                val errorMsg = context.getString(result.error)
-                Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
+            result.success?.let { successUser ->
+                Toast.makeText(context, "$welcomeText ${successUser.displayName}", Toast.LENGTH_LONG).show()
+                onLoginSuccess(successUser)
+            }
+            result.error?.let { errorRes ->
+                Toast.makeText(context, errorRes, Toast.LENGTH_SHORT).show()
             }
         }
     }

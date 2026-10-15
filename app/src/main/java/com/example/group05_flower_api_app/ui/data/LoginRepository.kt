@@ -16,8 +16,6 @@ class LoginRepository(val dataSource: LoginDataSource) {
         get() = user != null
 
     init {
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
         user = null
     }
 
@@ -26,8 +24,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
         dataSource.logout()
     }
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
-        // handle login
+    suspend fun login(username: String, password: String): Result<LoggedInUser> {
         val result = dataSource.login(username, password)
 
         if (result is Result.Success) {
@@ -40,7 +37,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
     /**
      * Authenticates user using Google OAuth 2.0 ID Token and updates local cached session.
      */
-    fun loginWithGoogle(idToken: String, displayName: String): Result<LoggedInUser> {
+    suspend fun loginWithGoogle(idToken: String, displayName: String): Result<LoggedInUser> {
         val result = dataSource.loginWithGoogle(idToken, displayName)
 
         if (result is Result.Success) {
@@ -52,7 +49,5 @@ class LoginRepository(val dataSource: LoginDataSource) {
 
     private fun setLoggedInUser(loggedInUser: LoggedInUser) {
         this.user = loggedInUser
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
     }
 }
