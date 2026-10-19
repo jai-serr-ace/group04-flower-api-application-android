@@ -12,19 +12,23 @@ import java.util.concurrent.TimeUnit
 object ApiClient {
 
     /**
-     * Base URL for the Spring Boot REST API.
-     * Default: "http://10.0.2.2:8080/" (Android Emulator localhost pointing to Spring Boot default port 8080).
+     * Base URL for the REST API.
      *
-     * IMPORTANT FOR DEPLOYMENT: Update this URL to your production HTTPS backend domain
-     * (e.g., "https://api.yourdomain.com/") before committing production builds.
+     * Standard Android Emulator Localhost (Default): "http://10.0.2.2:8080/"
+     * Optional Deployed Backend (Render): "https://group-04-flower-api-spring-boot.onrender.com/"
+     * USB Debugging Port Forwarding: "http://127.0.0.1:8080/"
      */
     var baseUrl: String = "http://10.0.2.2:8080/"
         set(value) {
-            field = if (value.endsWith("/")) value else "$value/"
+            val formatted = if (value.endsWith("/")) value else "$value/"
+            if (field != formatted) {
+                field = formatted
+                _authApiService = null
+            }
         }
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BASIC
+        level = HttpLoggingInterceptor.Level.BODY
     }
 
     private val okHttpClient = OkHttpClient.Builder()
@@ -33,13 +37,21 @@ object ApiClient {
         .readTimeout(30, TimeUnit.SECONDS)
         .build()
 
-    val authApiService: AuthApiService by lazy {
-        val url = if (baseUrl.endsWith("/")) baseUrl else "$baseUrl/"
-        Retrofit.Builder()
-            .baseUrl(url)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(AuthApiService::class.java)
-    }
+    private var _authApiService: AuthApiService? = null
+
+    val authApiService: AuthApiService
+        get() {
+            var instance = _authApiService
+            if (instance == null) {
+                val url = if (baseUrl.endsWith("/")) baseUrl else "$baseUrl/"
+                instance = Retrofit.Builder()
+                    .baseUrl(url)
+                    .client(okHttpClient)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                    .create(AuthApiService::class.java)
+                _authApiService = instance
+            }
+            return instance
+        }
 }

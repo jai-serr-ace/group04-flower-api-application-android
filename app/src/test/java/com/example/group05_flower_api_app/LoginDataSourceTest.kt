@@ -50,13 +50,13 @@ class LoginDataSourceTest {
     }
 
     @Test
-    fun `loginWithGoogle sends ID token to REST API and saves returned session token`() = runTest {
+    fun `loginWithGoogle sends ID token to REST API and saves verified Google token`() = runTest {
         // Arrange
         val expectedTokenResponse = """
             {
-                "token": "jwt_session_token_12345",
-                "userId": "user_google_777",
-                "displayName": "Alice Smith",
+                "subject": "user_google_777",
+                "issuer": "https://accounts.google.com",
+                "audience": ["web-client-id"],
                 "email": "alice@example.com"
             }
         """.trimIndent()
@@ -85,8 +85,8 @@ class LoginDataSourceTest {
         assertEquals("POST", recordedRequest.method)
         assertTrue(recordedRequest.body.readUtf8().contains("google_id_token_xyz"))
 
-        // Assert - Verify TokenManager saved session token
-        verify { tokenManager.saveAuthToken("jwt_session_token_12345") }
+        // Assert - Verify TokenManager saved verified Google token
+        verify { tokenManager.saveAuthToken("google_id_token_xyz") }
 
         // Assert - Verify Result Success
         assertTrue(result is Result.Success)
@@ -96,7 +96,7 @@ class LoginDataSourceTest {
     }
 
     @Test
-    fun `loginWithGoogle handles API error with fallback user`() = runTest {
+    fun `loginWithGoogle rejects API authentication errors`() = runTest {
         // Arrange
         val mockApi = mockk<AuthApiService>()
         coEvery { mockApi.loginWithGoogle(any()) } returns Response.error(401, mockk(relaxed = true))
@@ -113,8 +113,25 @@ class LoginDataSourceTest {
         )
 
         // Assert
-        assertTrue(result is Result.Success)
-        val user = (result as Result.Success).data
-        assertEquals("Bob", user.displayName)
+        assertTrue(result is Result.Error)
+        verify(exactly = 0) { tokenManager.saveAuthToken(any()) }
+        verify { tokenManager.clearAuthToken() }
+    }
+    @Test
+    fun `connection failure does not log in or store a token`() = runTest {
+        val mockApi = mockk<AuthApiService>()
+        coEvery { mockApi.loginWithGoogle(any()) } throws java.io.IOException("Connection refused")
+        val result = LoginDataSource(mockApi, tokenManager).loginWithGoogle("token", "Bob")
+        assertTrue(result is Result.Error)
+        verify(exactly = 0) { tokenManager.saveAuthToken(any()) }
+    }
+
+    @Test
+    fun `unexpected success response does not log in`() = runTest {
+        mockWebServer.enqueue(MockResponse().setResponseCode(200)
+            .setBody("{}").addHeader("Content-Type", "application/json"))
+        val result = LoginDataSource(authApiService, tokenManager).loginWithGoogle("token", "Bob")
+        assertTrue(result is Result.Error)
+        verify(exactly = 0) { tokenManager.saveAuthToken(any()) }
     }
 }

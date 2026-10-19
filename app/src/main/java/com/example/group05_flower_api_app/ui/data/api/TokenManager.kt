@@ -6,7 +6,7 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
 /**
- * Secure token manager that stores and retrieves the Spring Boot session JWT token
+ * Secure token manager that stores and retrieves the verified Google ID token
  * using Android's [EncryptedSharedPreferences].
  */
 class TokenManager(context: Context) {

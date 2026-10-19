@@ -1,11 +1,10 @@
 package com.example.group05_flower_api_app.ui.data.api
 
-/**
- * Data model for authentication response returned by the Spring Boot REST API.
- */
+/** Verified identity returned by POST /api/auth/google. */
 data class AuthResponse(
-    val token: String,
-    val userId: String,
-    val displayName: String,
-    val email: String? = null
+    val subject: String? = null,
+    val issuer: String? = null,
+    val audience: List<String> = emptyList(),
+    val email: String? = null,
+    val emailVerified: Boolean? = null
 )
