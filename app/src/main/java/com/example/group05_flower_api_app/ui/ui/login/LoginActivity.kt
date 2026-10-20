@@ -23,8 +23,10 @@ class LoginActivity : ComponentActivity() {
             MaterialTheme {
                 LoginScreen(
                     viewModel = loginViewModel,
-                    onLoginSuccess = { _ ->
-                        val intent = Intent(this, HomeActivity::class.java)
+                    onLoginSuccess = { user ->
+                        val intent = Intent(this, HomeActivity::class.java).apply {
+                            putExtra(HomeActivity.EXTRA_USERNAME, user.displayName)
+                        }
                         startActivity(intent)
                         finish()
                     }
