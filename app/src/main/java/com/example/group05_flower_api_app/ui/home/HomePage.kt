@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -17,7 +18,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun HomePage(
     viewModel: HomeViewModel = HomeViewModel(),
-    onSearch: (String) -> Unit = {}
+    onSearch: (String) -> Unit = {},
+    onUploadClick: () -> Unit = {}
 ) {
     var searchQuery by remember { mutableStateOf("") }
 
@@ -54,8 +56,24 @@ fun HomePage(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                     )
+                },
+                actions = {
+                    IconButton(onClick = onUploadClick) {
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = "Upload Flower"
+                        )
+                    }
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = onUploadClick) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Upload Flower"
+                )
+            }
         }
     ) { innerPadding ->
         Box(
