@@ -1,4 +1,4 @@
-package com.example.group05_flower_api_app.ui.ui.login
+package com.example.group05_flower_api_app.ui.login
 
 /**
  * Authentication result : success (user details) or error message.

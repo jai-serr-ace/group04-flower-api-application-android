@@ -1,4 +1,4 @@
-package com.example.group05_flower_api_app.ui.ui.login
+package com.example.group05_flower_api_app.ui.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,7 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import androidx.lifecycle.ViewModelProvider
-import com.example.group05_flower_api_app.ui.ui.home.HomeActivity
+import com.example.group05_flower_api_app.ui.home.HomeActivity
 
 class LoginActivity : ComponentActivity() {
 

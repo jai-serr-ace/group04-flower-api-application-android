@@ -1,4 +1,4 @@
-package com.example.group05_flower_api_app.ui.data.model
+package com.example.group05_flower_api_app.data.model
 
 /**
  * Data class that captures user information for logged in users retrieved from LoginRepository

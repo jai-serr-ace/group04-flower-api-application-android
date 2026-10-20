@@ -1,4 +1,4 @@
-package com.example.group05_flower_api_app.ui.data.api
+package com.example.group05_flower_api_app.data.api
 
 /** Verified identity returned by POST /api/auth/google. */
 data class AuthResponse(

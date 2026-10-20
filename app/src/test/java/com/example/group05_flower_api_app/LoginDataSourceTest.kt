@@ -1,9 +1,9 @@
 package com.example.group05_flower_api_app
 
-import com.example.group05_flower_api_app.ui.data.LoginDataSource
-import com.example.group05_flower_api_app.ui.data.Result
-import com.example.group05_flower_api_app.ui.data.api.AuthApiService
-import com.example.group05_flower_api_app.ui.data.api.TokenManager
+import com.example.group05_flower_api_app.data.LoginDataSource
+import com.example.group05_flower_api_app.data.Result
+import com.example.group05_flower_api_app.data.api.AuthApiService
+import com.example.group05_flower_api_app.data.api.TokenManager
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verify
@@ -117,6 +117,7 @@ class LoginDataSourceTest {
         verify(exactly = 0) { tokenManager.saveAuthToken(any()) }
         verify { tokenManager.clearAuthToken() }
     }
+
     @Test
     fun `connection failure does not log in or store a token`() = runTest {
         val mockApi = mockk<AuthApiService>()

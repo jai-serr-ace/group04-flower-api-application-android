@@ -1,4 +1,4 @@
-package com.example.group05_flower_api_app.ui.ui.result
+package com.example.group05_flower_api_app.ui.result
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons

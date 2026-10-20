@@ -1,10 +1,10 @@
 package com.example.group05_flower_api_app
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.example.group05_flower_api_app.ui.data.LoginRepository
-import com.example.group05_flower_api_app.ui.data.Result
-import com.example.group05_flower_api_app.ui.data.model.LoggedInUser
-import com.example.group05_flower_api_app.ui.ui.login.LoginViewModel
+import com.example.group05_flower_api_app.data.LoginRepository
+import com.example.group05_flower_api_app.data.Result
+import com.example.group05_flower_api_app.data.model.LoggedInUser
+import com.example.group05_flower_api_app.ui.login.LoginViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers

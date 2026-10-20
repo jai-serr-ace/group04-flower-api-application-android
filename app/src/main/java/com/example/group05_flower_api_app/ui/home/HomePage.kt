@@ -1,4 +1,4 @@
-package com.example.group05_flower_api_app.ui.ui.home
+package com.example.group05_flower_api_app.ui.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions

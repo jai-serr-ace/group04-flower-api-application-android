@@ -1,4 +1,4 @@
-package com.example.group05_flower_api_app.ui.ui.login
+package com.example.group05_flower_api_app.ui.login
 
 import android.app.Activity
 import android.content.Context

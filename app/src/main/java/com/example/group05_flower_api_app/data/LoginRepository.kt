@@ -1,6 +1,6 @@
-package com.example.group05_flower_api_app.ui.data
+package com.example.group05_flower_api_app.data
 
-import com.example.group05_flower_api_app.ui.data.model.LoggedInUser
+import com.example.group05_flower_api_app.data.model.LoggedInUser
 
 /**
  * Class that requests authentication and user information from the remote data source and

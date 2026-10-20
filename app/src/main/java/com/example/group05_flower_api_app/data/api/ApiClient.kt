@@ -1,4 +1,4 @@
-package com.example.group05_flower_api_app.ui.data.api
+package com.example.group05_flower_api_app.data.api
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

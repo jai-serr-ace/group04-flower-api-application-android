@@ -15,7 +15,7 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Group05flowerapiapp">
         <activity
-            android:name=".ui.ui.login.LoginActivity"
+            android:name=".ui.login.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize">
@@ -26,12 +26,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.ui.home.HomeActivity"
+            android:name=".ui.home.HomeActivity"
             android:exported="false"
             android:theme="@style/Theme.Group05flowerapiapp"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.ui.result.ResultActivity"
+            android:name=".ui.result.ResultActivity"
             android:exported="false"
             android:theme="@style/Theme.Group05flowerapiapp"
             android:windowSoftInputMode="adjustResize" />

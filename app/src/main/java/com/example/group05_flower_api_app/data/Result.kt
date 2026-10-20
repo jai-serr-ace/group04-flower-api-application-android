@@ -1,4 +1,4 @@
-package com.example.group05_flower_api_app.ui.data
+package com.example.group05_flower_api_app.data
 
 /**
  * A generic class that holds a value with its loading status.

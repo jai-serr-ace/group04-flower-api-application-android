@@ -1,12 +1,12 @@
-package com.example.group05_flower_api_app.ui.ui.login
+package com.example.group05_flower_api_app.ui.login
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.group05_flower_api_app.R
-import com.example.group05_flower_api_app.ui.data.LoginRepository
-import com.example.group05_flower_api_app.ui.data.Result
+import com.example.group05_flower_api_app.data.LoginRepository
+import com.example.group05_flower_api_app.data.Result
 import kotlinx.coroutines.launch
 
 /**

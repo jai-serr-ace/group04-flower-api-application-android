@@ -1,10 +1,10 @@
-package com.example.group05_flower_api_app.ui.data
+package com.example.group05_flower_api_app.data
 
-import com.example.group05_flower_api_app.ui.data.api.ApiClient
-import com.example.group05_flower_api_app.ui.data.api.AuthApiService
-import com.example.group05_flower_api_app.ui.data.api.GoogleAuthRequest
-import com.example.group05_flower_api_app.ui.data.api.TokenManager
-import com.example.group05_flower_api_app.ui.data.model.LoggedInUser
+import com.example.group05_flower_api_app.data.api.ApiClient
+import com.example.group05_flower_api_app.data.api.AuthApiService
+import com.example.group05_flower_api_app.data.api.GoogleAuthRequest
+import com.example.group05_flower_api_app.data.api.TokenManager
+import com.example.group05_flower_api_app.data.model.LoggedInUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.CancellationException
