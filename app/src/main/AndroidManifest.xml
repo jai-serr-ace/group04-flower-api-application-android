@@ -40,6 +40,11 @@
             android:exported="false"
             android:theme="@style/Theme.Group05flowerapiapp"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.user.UserActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Group05flowerapiapp"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

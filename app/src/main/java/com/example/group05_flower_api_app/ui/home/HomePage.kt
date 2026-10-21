@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -19,7 +20,8 @@ import androidx.compose.ui.unit.dp
 fun HomePage(
     viewModel: HomeViewModel = HomeViewModel(),
     onSearch: (String) -> Unit = {},
-    onUploadClick: () -> Unit = {}
+    onUploadClick: () -> Unit = {},
+    onUserClick: () -> Unit = {}
 ) {
     var searchQuery by remember { mutableStateOf("") }
 
@@ -56,23 +58,44 @@ fun HomePage(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                     )
-                },
-                actions = {
-                    IconButton(onClick = onUploadClick) {
+                }
+            )
+        },
+        bottomBar = {
+            BottomAppBar(
+                modifier = Modifier.fillMaxWidth(),
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                windowInsets = BottomAppBarDefaults.windowInsets
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    FloatingActionButton(
+                        onClick = onUploadClick,
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+                    ) {
                         Icon(
                             imageVector = Icons.Filled.Add,
                             contentDescription = "Upload Flower"
                         )
                     }
+
+                    IconButton(
+                        onClick = onUserClick,
+                        modifier = Modifier.align(Alignment.CenterEnd)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.AccountCircle,
+                            contentDescription = "User Profile",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 }
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = onUploadClick) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "Upload Flower"
-                )
             }
         }
     ) { innerPadding ->

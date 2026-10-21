@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import com.example.group05_flower_api_app.ui.result.ResultActivity
 import com.example.group05_flower_api_app.ui.upload.UploadActivity
+import com.example.group05_flower_api_app.ui.user.UserActivity
 
 class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +29,10 @@ class HomeActivity : ComponentActivity() {
                     },
                     onUploadClick = {
                         val intent = Intent(this, UploadActivity::class.java)
+                        startActivity(intent)
+                    },
+                    onUserClick = {
+                        val intent = Intent(this, UserActivity::class.java)
                         startActivity(intent)
                     }
                 )

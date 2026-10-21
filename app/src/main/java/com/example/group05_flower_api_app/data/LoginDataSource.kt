@@ -46,9 +46,11 @@ class LoginDataSource(
                     return@withContext Result.Error(IOException("Invalid sign-in response from server"))
                 }
                 tokenManager?.saveAuthToken(idToken)
+                val finalName = displayName.ifBlank { identity.email ?: "Google User" }
+                tokenManager?.saveUserName(finalName)
                 Result.Success(LoggedInUser(
                     userId = subject,
-                    displayName = displayName.ifBlank { identity.email ?: "Google User" }
+                    displayName = finalName
                 ))
             } catch (e: CancellationException) {
                 throw e

@@ -66,4 +66,15 @@ class LoginViewModelTest {
         assertNotNull(result)
         assertEquals(R.string.login_failed, result?.error)
     }
+
+    @Test
+    fun `loginAsDeveloper updates loginResult LiveData with developer user`() {
+        // Act
+        viewModel.loginAsDeveloper()
+
+        // Assert
+        val result = viewModel.loginResult.value
+        assertNotNull(result)
+        assertEquals("Developer User", result?.success?.displayName)
+    }
 }

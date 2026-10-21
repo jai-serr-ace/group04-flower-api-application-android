@@ -54,6 +54,15 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         _loginResult.value = LoginResult(error = R.string.login_failed)
     }
 
+    /**
+     * Bypasses OAuth authentication for developer testing/offline development.
+     */
+    fun loginAsDeveloper() {
+        _loginResult.value = LoginResult(
+            success = LoggedInUserView(displayName = "Developer User")
+        )
+    }
+
     fun loginDataChanged(username: String, password: String) {
         _loginForm.value = LoginFormState(isDataValid = true)
     }
