@@ -10,9 +10,10 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.group05_flower_api_app.ui.ui.home.HomeActivity
-import com.example.group05_flower_api_app.ui.ui.login.LoginActivity
-import com.example.group05_flower_api_app.ui.ui.result.ResultActivity
+import com.example.group05_flower_api_app.ui.home.HomeActivity
+import com.example.group05_flower_api_app.ui.login.LoginActivity
+import com.example.group05_flower_api_app.ui.result.ResultActivity
+import com.example.group05_flower_api_app.ui.upload.UploadActivity
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.After
 import org.junit.Before
@@ -58,6 +59,17 @@ class NavigationTest {
                 hasComponent(ResultActivity::class.java.name),
                 hasExtra("EXTRA_QUERY", "Roses")
             ))
+        }
+    }
+
+    @Test
+    fun testUploadNavigatesToUploadActivity() {
+        // Launch HomeActivity for testing upload navigation
+        ActivityScenario.launch(HomeActivity::class.java).use {
+            onView(withContentDescription("Upload Flower")).perform(click())
+
+            // Assert that the intent to open UploadActivity was successfully triggered
+            intended(hasComponent(UploadActivity::class.java.name))
         }
     }
 }
