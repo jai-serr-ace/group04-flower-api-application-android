@@ -33,4 +33,8 @@ class UserViewModel(context: Context? = null) : ViewModel() {
         _uiState.value = _uiState.value.copy(status = newStatus)
         tokenManager?.saveUserStatus(newStatus)
     }
+
+    fun signOut() {
+        tokenManager?.clearAuthToken()
+    }
 }

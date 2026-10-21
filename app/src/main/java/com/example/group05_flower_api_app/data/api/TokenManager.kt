@@ -72,6 +72,13 @@ class TokenManager(context: Context) {
         return prefs.getInt(KEY_SUBMISSION_COUNT, 0)
     }
 
+    fun resetToDeveloperDefaults() {
+        clearAuthToken()
+        saveUserName("Developer User")
+        saveUserStatus("Normal")
+        saveSubmissionCount(0)
+    }
+
     fun clearAuthToken() {
         prefs.edit()
             .remove(KEY_AUTH_TOKEN)

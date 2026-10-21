@@ -26,13 +26,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserPage(
     viewModel: UserViewModel = UserViewModel(),
     onBackClick: () -> Unit = {},
     onManageFlowersClick: () -> Unit = {},
-    onManageUsersClick: () -> Unit = {}
+    onManageUsersClick: () -> Unit = {},
+    onSignOutClick: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -245,6 +249,28 @@ fun UserPage(
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
                         )
                     }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // 6. Sign Out Button
+                OutlinedButton(
+                    onClick = onSignOutClick,
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    ),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.error),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    Text("Sign Out")
                 }
             }
         }

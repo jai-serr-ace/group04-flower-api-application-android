@@ -35,6 +35,14 @@ class LoginRepository(val dataSource: LoginDataSource) {
     }
 
     /**
+     * Bypasses OAuth authentication for developer testing, resetting saved user profile to defaults.
+     */
+    fun loginAsDeveloper() {
+        dataSource.loginAsDeveloper()
+        setLoggedInUser(LoggedInUser("dev-123", "Developer User"))
+    }
+
+    /**
      * Authenticates user using Google OAuth 2.0 ID Token and updates local cached session.
      */
     suspend fun loginWithGoogle(idToken: String, displayName: String): Result<LoggedInUser> {

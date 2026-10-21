@@ -58,6 +58,7 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
      * Bypasses OAuth authentication for developer testing/offline development.
      */
     fun loginAsDeveloper() {
+        loginRepository.loginAsDeveloper()
         _loginResult.value = LoginResult(
             success = LoggedInUserView(displayName = "Developer User")
         )

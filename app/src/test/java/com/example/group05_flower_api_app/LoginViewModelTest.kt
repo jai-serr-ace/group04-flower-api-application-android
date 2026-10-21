@@ -26,7 +26,7 @@ class LoginViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val testDispatcher = StandardTestDispatcher()
-    private val loginRepository: LoginRepository = mockk()
+    private val loginRepository: LoginRepository = mockk(relaxed = true)
     private lateinit var viewModel: LoginViewModel
 
     @Before

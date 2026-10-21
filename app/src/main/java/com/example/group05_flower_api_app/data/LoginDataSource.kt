@@ -60,6 +60,10 @@ class LoginDataSource(
             }
         }
 
+    fun loginAsDeveloper() {
+        tokenManager?.resetToDeveloperDefaults()
+    }
+
     fun logout() {
         tokenManager?.clearAuthToken()
     }
