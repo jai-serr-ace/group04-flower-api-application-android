@@ -11,11 +11,20 @@ class ResultActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val viewModel = ResultViewModel()
+        val query = intent.getStringExtra("EXTRA_QUERY") ?: ""
+        val flowerId = intent.getStringExtra("EXTRA_FLOWER_ID")
+        val viewModel = androidx.lifecycle.ViewModelProvider(this)[ResultViewModel::class.java].apply {
+            loadFlowerDetails(query, flowerId)
+        }
 
         setContent {
             MaterialTheme {
-                ResultPage(viewModel = viewModel)
+                ResultPage(
+                    viewModel = viewModel,
+                    query = query,
+                    onBackClick = { finish() },
+                    onRetry = { viewModel.loadFlowerDetails(query, flowerId) }
+                )
             }
         }
     }

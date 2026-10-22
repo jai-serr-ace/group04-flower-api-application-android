@@ -67,6 +67,18 @@ fun UserPage(
                 verticalArrangement = Arrangement.spacedBy(20.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
+                if (uiState.isLoading) {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+
+                uiState.errorMessage?.let { message ->
+                    Text(
+                        text = message,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
                 // 1. Photo (classic circle pfp with Google account URL or default fallback)
                 Surface(
                     shape = CircleShape,
@@ -121,6 +133,13 @@ fun UserPage(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
+                    uiState.email?.takeIf { it.isNotBlank() }?.let { email ->
+                        Text(
+                            text = email,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
 
                 // 3. Status field (Normal / Admin)
@@ -158,6 +177,14 @@ fun UserPage(
                             }
                         )
                     }
+                }
+
+                if (uiState.roles.isNotEmpty()) {
+                    Text(
+                        text = "Roles: ${uiState.roles.joinToString()}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
 
                 // 4. Admin Manage Button with Dropdown Menu

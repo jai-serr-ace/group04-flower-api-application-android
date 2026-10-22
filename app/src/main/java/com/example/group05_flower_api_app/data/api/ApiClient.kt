@@ -12,18 +12,20 @@ import java.util.concurrent.TimeUnit
 object ApiClient {
 
     /**
-     * Base URL for the REST API.
+     * Base URL for the REST API deployed on Render.
      *
-     * Standard Android Emulator Localhost (Default): "http://10.0.2.2:8080/"
-     * Optional Deployed Backend (Render): "https://group-04-flower-api-spring-boot.onrender.com/"
-     * USB Debugging Port Forwarding: "http://127.0.0.1:8080/"
+     * Local Testing (USB Debugging Port Forwarding): "http://127.0.0.1:8080/"
+     * Deployed Backend (Render): "https://group-04-flower-api-spring-boot-qcxe.onrender.com/"
      */
-    var baseUrl: String = "http://127.0.0.1:8080/"
+    const val BASE_URL = "https://group-04-flower-api-spring-boot-qcxe.onrender.com/"
+
+    var baseUrl: String = BASE_URL
         set(value) {
             val formatted = if (value.endsWith("/")) value else "$value/"
             if (field != formatted) {
                 field = formatted
                 _authApiService = null
+                _flowerApiService = null
             }
         }
 
@@ -38,6 +40,7 @@ object ApiClient {
         .build()
 
     private var _authApiService: AuthApiService? = null
+    private var _flowerApiService: FlowerApiService? = null
 
     val authApiService: AuthApiService
         get() {
@@ -51,6 +54,22 @@ object ApiClient {
                     .build()
                     .create(AuthApiService::class.java)
                 _authApiService = instance
+            }
+            return instance
+        }
+
+    val flowerApiService: FlowerApiService
+        get() {
+            var instance = _flowerApiService
+            if (instance == null) {
+                val url = if (baseUrl.endsWith("/")) baseUrl else "$baseUrl/"
+                instance = Retrofit.Builder()
+                    .baseUrl(url)
+                    .client(okHttpClient)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                    .create(FlowerApiService::class.java)
+                _flowerApiService = instance
             }
             return instance
         }
