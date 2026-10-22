@@ -44,7 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.group05_flower_api_app.ui.data.model.Flower
+import com.example.group05_flower_api_app.data.model.Flower
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
