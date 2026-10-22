@@ -14,11 +14,9 @@ object ApiClient {
     /**
      * Base URL for the REST API.
      *
-     * Standard Android Emulator Localhost (Default): "http://10.0.2.2:8080/"
-     * Optional Deployed Backend (Render): "https://group-04-flower-api-spring-boot.onrender.com/"
-     * USB Debugging Port Forwarding: "http://127.0.0.1:8080/"
+     * Deployed Render backend used by the app.
      */
-    var baseUrl: String = "http://127.0.0.1:8080/"
+    var baseUrl: String = "https://group-04-flower-api-spring-boot-1.onrender.com/"
         set(value) {
             val formatted = if (value.endsWith("/")) value else "$value/"
             if (field != formatted) {

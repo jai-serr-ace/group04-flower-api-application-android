@@ -13,13 +13,10 @@ import java.util.concurrent.TimeUnit
 object ApiClient {
 
     /**
-     * Base URL for the Spring Boot REST API.
-     * Default: "http://10.0.2.2:8080/" (Android Emulator localhost pointing to Spring Boot default port 8080).
-     *
-     * IMPORTANT FOR DEPLOYMENT: Update this URL to your production HTTPS backend domain
-     * (e.g., "https://api.yourdomain.com/") before committing production builds.
+     * Base URL for the deployed Spring Boot REST API.
+     * The trailing slash is required by Retrofit.
      */
-    var baseUrl: String = "http://10.0.2.2:8080/"
+    var baseUrl: String = "https://group-04-flower-api-spring-boot-1.onrender.com/"
         set(value) {
             field = if (value.endsWith("/")) value else "$value/"
         }
@@ -31,16 +28,23 @@ object ApiClient {
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
         .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
+        // Render may need a few seconds to wake the service from sleep.
+        .readTimeout(60, TimeUnit.SECONDS)
         .build()
 
-    val authApiService: AuthApiService by lazy {
-        val url = if (baseUrl.endsWith("/")) baseUrl else "$baseUrl/"
+    private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl(url)
+            .baseUrl(baseUrl)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(AuthApiService::class.java)
+    }
+
+    val flowerApiService: FlowerApiService by lazy {
+        retrofit.create(FlowerApiService::class.java)
+    }
+
+    val authApiService: AuthApiService by lazy {
+        retrofit.create(AuthApiService::class.java)
     }
 }
