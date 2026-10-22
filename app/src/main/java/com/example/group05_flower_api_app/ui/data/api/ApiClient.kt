@@ -33,19 +33,13 @@ object ApiClient {
         .readTimeout(30, TimeUnit.SECONDS)
         .build()
 
-    private val retrofit: Retrofit by lazy {
+    val authApiService: AuthApiService by lazy {
+        val url = if (baseUrl.endsWith("/")) baseUrl else "$baseUrl/"
         Retrofit.Builder()
-            .baseUrl(baseUrl)
+            .baseUrl(url)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-    }
-
-    val flowerApiService: FlowerApiService by lazy {
-        retrofit.create(FlowerApiService::class.java)
-    }
-
-    val authApiService: AuthApiService by lazy {
-        retrofit.create(AuthApiService::class.java)
+            .create(AuthApiService::class.java)
     }
 }

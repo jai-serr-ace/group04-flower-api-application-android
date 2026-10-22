@@ -1,0 +1,126 @@
+package com.example.group05_flower_api_app.ui.login
+
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import android.util.Log
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialException
+import com.example.group05_flower_api_app.R
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
+
+/**
+ * Helper object that integrates Android's Credential Manager API (`androidx.credentials`)
+ * and Google Identity library (`googleid`) to perform Google OAuth 2.0 Sign-In.
+ */
+object GoogleAuthHelper {
+    private const val TAG = "GoogleAuthHelper"
+
+    /**
+     * Recursively traverses context wrappers to locate the hosting [Activity].
+     * Credential Manager requires an Activity context to render the Google Sign-In bottom sheet dialog.
+     */
+    private tailrec fun Context.findActivity(): Activity? = when (this) {
+        is Activity -> this
+        is ContextWrapper -> baseContext.findActivity()
+        else -> null
+    }
+
+    /**
+     * Launches the Google OAuth 2.0 Credential Manager sign-in prompt.
+     *
+     * @param context The UI context (must resolve to an [Activity]).
+     * @param onSuccess Callback invoked when authentication succeeds with a valid ID Token and user display name.
+     * @param onFailure Callback invoked when sign-in fails or is canceled by the user.
+     */
+    suspend fun signInWithGoogle(
+        context: Context,
+        onSuccess: (idToken: String, displayName: String) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val activity = context.findActivity()
+        if (activity == null) {
+            Log.e(TAG, "Context is not an Activity")
+            onFailure(IllegalStateException("Context is not an Activity"))
+            return
+        }
+
+        val credentialManager = CredentialManager.create(activity)
+        val webClientId = activity.getString(R.string.default_web_client_id)
+
+        // Validate that the placeholder Web Client ID has been replaced with a real Google Cloud Web Client ID
+        if (webClientId.contains("YOUR_WEB_CLIENT_ID")) {
+            val msg = "Please replace default_web_client_id in strings.xml with your Google Cloud Web Client ID."
+            Log.e(TAG, msg)
+            onFailure(IllegalStateException(msg))
+            return
+        }
+
+        // Use Google's explicit Sign in with Google UI. This lets the user
+        // choose an account or sign in through Google instead of requiring
+        // an already-authorized Credential Manager account.
+        val signInWithGoogleOption = GetSignInWithGoogleOption.Builder(
+            serverClientId = webClientId
+        )
+            .build()
+
+        val request = GetCredentialRequest.Builder()
+            .addCredentialOption(signInWithGoogleOption)
+            .build()
+
+        try {
+            Log.d("AUTH_TEST", "Starting Google sign-in")
+            // Request credentials via Android Credential Manager
+            val result = credentialManager.getCredential(
+                context = activity,
+                request = request
+            )
+            Log.d("AUTH_TEST", "Credential response received")
+            Log.d("AUTH_TEST", "Credential type: ${result.credential::class.java.name}")
+
+            val credential = result.credential
+            // Verify if the returned credential is a Google ID Token Credential
+            if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                try {
+                    // Create and verify GoogleIdTokenCredential object from credential bundle
+                    val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                    val idToken = googleIdTokenCredential.idToken
+
+                    if (idToken.isNotEmpty()) {
+                        Log.d("AUTH_TEST", "Verified: Credential is a valid Google ID Token (length: ${idToken.length})")
+                        Log.d("AUTH_TEST", "User email/id: ${googleIdTokenCredential.id}")
+                        Log.d("AUTH_TEST", "User displayName: ${googleIdTokenCredential.displayName}")
+
+                        val displayName = googleIdTokenCredential.displayName
+                            ?: googleIdTokenCredential.givenName
+                            ?: googleIdTokenCredential.id
+                        onSuccess(idToken, displayName)
+                    } else {
+                        val errorMsg = "Verification failed: Received empty Google ID token"
+                        Log.e("AUTH_TEST", errorMsg)
+                        Log.e(TAG, errorMsg)
+                        onFailure(IllegalStateException(errorMsg))
+                    }
+                } catch (e: GoogleIdTokenParsingException) {
+                    Log.e("AUTH_TEST", "Verification failed: Unable to parse Google ID token", e)
+                    Log.e(TAG, "Received invalid Google ID token response", e)
+                    onFailure(e)
+                }
+            } else {
+                val errorMsg = "Verification failed: Unexpected credential type: ${credential.type}"
+                Log.e("AUTH_TEST", errorMsg)
+                Log.e(TAG, errorMsg)
+                onFailure(IllegalArgumentException(errorMsg))
+            }
+        } catch (e: GetCredentialException) {
+            Log.e(TAG, "GetCredentialException during Google sign-in: ${e.message}", e)
+            onFailure(e)
+        } catch (e: Exception) {
+            Log.e(TAG, "Unexpected exception during Google sign-in: ${e.message}", e)
+            onFailure(e)
+        }
+    }
+}

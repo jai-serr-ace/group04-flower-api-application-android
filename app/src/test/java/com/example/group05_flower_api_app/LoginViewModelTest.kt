@@ -1,10 +1,10 @@
 package com.example.group05_flower_api_app
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.example.group05_flower_api_app.ui.data.LoginRepository
-import com.example.group05_flower_api_app.ui.data.Result
-import com.example.group05_flower_api_app.ui.data.model.LoggedInUser
-import com.example.group05_flower_api_app.ui.ui.login.LoginViewModel
+import com.example.group05_flower_api_app.data.LoginRepository
+import com.example.group05_flower_api_app.data.Result
+import com.example.group05_flower_api_app.data.model.LoggedInUser
+import com.example.group05_flower_api_app.ui.login.LoginViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +26,7 @@ class LoginViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val testDispatcher = StandardTestDispatcher()
-    private val loginRepository: LoginRepository = mockk()
+    private val loginRepository: LoginRepository = mockk(relaxed = true)
     private lateinit var viewModel: LoginViewModel
 
     @Before
@@ -65,5 +65,16 @@ class LoginViewModelTest {
         val result = viewModel.loginResult.value
         assertNotNull(result)
         assertEquals(R.string.login_failed, result?.error)
+    }
+
+    @Test
+    fun `loginAsDeveloper updates loginResult LiveData with developer user`() {
+        // Act
+        viewModel.loginAsDeveloper()
+
+        // Assert
+        val result = viewModel.loginResult.value
+        assertNotNull(result)
+        assertEquals("Developer User", result?.success?.displayName)
     }
 }
