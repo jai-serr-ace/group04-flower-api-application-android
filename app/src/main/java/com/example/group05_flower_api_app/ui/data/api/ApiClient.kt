@@ -1,5 +1,6 @@
 package com.example.group05_flower_api_app.ui.data.api
 
+import com.example.group05_flower_api_app.data.api.AuthApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
