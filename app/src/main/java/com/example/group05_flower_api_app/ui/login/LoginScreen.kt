@@ -64,6 +64,9 @@ fun LoginScreen(
                     }
                 )
             }
+        },
+        onBypassOAuthClick = {
+            viewModel.loginAsDeveloper()
         }
     )
 }
@@ -74,7 +77,8 @@ fun LoginScreen(
 @Composable
 fun LoginContent(
     isLoading: Boolean,
-    onGoogleSignInClick: () -> Unit = {}
+    onGoogleSignInClick: () -> Unit = {},
+    onBypassOAuthClick: () -> Unit = {}
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -89,7 +93,7 @@ fun LoginContent(
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(24.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
                     text = "Welcome",
@@ -104,6 +108,15 @@ fun LoginContent(
                         .height(50.dp)
                 ) {
                     Text(stringResource(R.string.action_sign_in_google))
+                }
+
+                OutlinedButton(
+                    onClick = onBypassOAuthClick,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                ) {
+                    Text("Bypass OAuth (Developer Mode)")
                 }
             }
 

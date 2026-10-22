@@ -26,7 +26,7 @@ class LoginViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val testDispatcher = StandardTestDispatcher()
-    private val loginRepository: LoginRepository = mockk()
+    private val loginRepository: LoginRepository = mockk(relaxed = true)
     private lateinit var viewModel: LoginViewModel
 
     @Before
@@ -65,5 +65,16 @@ class LoginViewModelTest {
         val result = viewModel.loginResult.value
         assertNotNull(result)
         assertEquals(R.string.login_failed, result?.error)
+    }
+
+    @Test
+    fun `loginAsDeveloper updates loginResult LiveData with developer user`() {
+        // Act
+        viewModel.loginAsDeveloper()
+
+        // Assert
+        val result = viewModel.loginResult.value
+        assertNotNull(result)
+        assertEquals("Developer User", result?.success?.displayName)
     }
 }
