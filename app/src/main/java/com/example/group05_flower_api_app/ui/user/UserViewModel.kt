@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.group05_flower_api_app.data.api.ApiClient
 import com.example.group05_flower_api_app.data.api.FlowerApiService
 import com.example.group05_flower_api_app.data.api.TokenManager
+import com.example.group05_flower_api_app.data.api.JwtUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,14 +26,18 @@ data class UserUiState(
 
 class UserViewModel(
     context: Context? = null,
-    private val apiService: FlowerApiService = ApiClient.flowerApiService
+    private val apiService: FlowerApiService = ApiClient.flowerApiService,
+    private val tokenManager: TokenManager? = context?.let { TokenManager(it.applicationContext) }
 ) : ViewModel() {
-    private val tokenManager = context?.let { TokenManager(it.applicationContext) }
+    // Recover the Google name even if an earlier profile refresh cached a generated username.
+    private val googleDisplayName = JwtUtils.parseGoogleIdToken(tokenManager?.getAuthToken())
+        ?.name?.takeIf { it.isNotBlank() }
+        ?: tokenManager?.getUserName()?.takeIf { it.isNotBlank() }
 
     private val _uiState = MutableStateFlow(
         UserUiState(
             photoUrl = tokenManager?.getUserPhotoUrl(),
-            name = tokenManager?.getUserName()?.takeIf { it.isNotBlank() } ?: "Google User",
+            name = googleDisplayName ?: "Google User",
             status = tokenManager?.getUserStatus() ?: "Normal",
             submissionCount = tokenManager?.getSubmissionCount() ?: 0,
             isLoading = tokenManager?.getAuthToken() != null
@@ -52,7 +57,9 @@ class UserViewModel(
                 if (response.isSuccessful) {
                     val profile = response.body()
                     profile?.let { userProfile ->
-                        val serverName = userProfile.name?.takeIf { it.isNotBlank() } ?: _uiState.value.name
+                        val displayName = googleDisplayName
+                            ?: userProfile.name?.takeIf { it.isNotBlank() }
+                            ?: _uiState.value.name
                         val serverStatus = userProfile.status
                             ?: if (userProfile.roles.contains("ROLE_ADMIN") || userProfile.roles.contains("ADMIN")) "Admin" else _uiState.value.status
                         val serverSubmissions = userProfile.submissionCount
@@ -62,7 +69,7 @@ class UserViewModel(
                         _uiState.value = UserUiState(
                             userId = userProfile.id,
                             photoUrl = serverPhoto,
-                            name = serverName,
+                            name = displayName,
                             email = userProfile.email,
                             status = serverStatus,
                             roles = userProfile.roles,
@@ -70,7 +77,7 @@ class UserViewModel(
                             isLoading = false
                         )
 
-                        tokenManager.saveUserName(serverName)
+                        tokenManager.saveUserName(displayName)
                         tokenManager.saveUserStatus(serverStatus)
                         tokenManager.saveSubmissionCount(serverSubmissions)
                         serverPhoto?.let { tokenManager.saveUserPhotoUrl(it) }
