@@ -8,7 +8,7 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialException
 import com.example.group05_flower_api_app.R
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 
@@ -59,15 +59,16 @@ object GoogleAuthHelper {
             return
         }
 
-        // Configure Google Sign-In options using the Web Client ID as the server audience
-        val googleIdOption = GetGoogleIdOption.Builder()
-            .setFilterByAuthorizedAccounts(false)
-            .setServerClientId(webClientId)
-            .setAutoSelectEnabled(false)
+        // Use Google's explicit Sign in with Google UI. This lets the user
+        // choose an account or sign in through Google instead of requiring
+        // an already-authorized Credential Manager account.
+        val signInWithGoogleOption = GetSignInWithGoogleOption.Builder(
+            serverClientId = webClientId
+        )
             .build()
 
         val request = GetCredentialRequest.Builder()
-            .addCredentialOption(googleIdOption)
+            .addCredentialOption(signInWithGoogleOption)
             .build()
 
         try {
